@@ -1,6 +1,7 @@
 from tilted_cam import Tilted_Cam
 from pdf_reader import PDFReader
 from desktop_gui import DesktopGui
+import tensorflow as tf
 
 SIGNAL_THRESHOLD = 5
 
@@ -31,8 +32,9 @@ def run(reader):
 
 
 if __name__ == "__main__":
-    gui = DesktopGui()
-    filename = gui.await_filename()
+    #gui = DesktopGui()
+    #filename = gui.await_filename()
+    filename = '/home/glassesman7/Downloads/test.pdf'
     reader = PDFReader(filename)
-    gui.await_start()
+    #gui.await_start()
     run(reader)

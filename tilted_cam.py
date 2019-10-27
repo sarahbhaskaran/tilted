@@ -134,8 +134,9 @@ class Tilted_Cam:
             min_pose_score=0.15)
         self.keypoint_coords *= output_scale
 
+        pose_index = self.get_principal_index()
         if self.frame_count < 5:
-            self.angle_baseline += self.get_angle(self.get_principal_index())
+            self.angle_baseline += self.get_angle(pose_index)
             self.frame_count += 1
         elif self.frame_count == 5:
             self._calibrate()

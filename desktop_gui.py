@@ -14,7 +14,6 @@ class DesktopGui():
         self.recal_clicked = False
 
         self.dir = os.path.dirname(os.path.abspath(__file__))
-        self.reader = PDFReader()
         self.window = Tk()
         self.window.title("Tilted")
         self.window.geometry('350x200')
