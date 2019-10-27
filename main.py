@@ -6,23 +6,29 @@ SIGNAL_THRESHOLD = 5
 
 def run(reader):
     page_already_turned = False
+    last_tilt = None
     counter = 0
     with tf.Session() as sess:
         cam = Tilted_Cam(sess)
         while True:
+            head_tilted = cam.get_tilt()
+            if head_tilted != last_tilt:
+                last_tilt = head_tilted
+                counter = 0
+                continue
             if counter < SIGNAL_THRESHOLD:
                 counter += 1
                 continue
-            if not page_already_turned:
-                head_tilted = cam.get_tilt()
-                if head_tilted == 'right':
-                    reader.turnForward()
-                    page_already_turned = True
-                if head_tilted == 'left':
-                    reader.turnBackward()
-                    page_already_turned = True
-                else:
-                    page_already_turned = False
+
+            if head_tilted == 'right' and not page_already_turned:
+                reader.turnForward()
+                page_already_turned = True
+            elif head_tilted == 'left' and not page_already_turned:
+                reader.turnBackward()
+                page_already_turned = True
+            elif head_tilted == '':
+                page_already_turned = False
+
 
 if __name__ == "__main__":
     gui = DesktopGui()
