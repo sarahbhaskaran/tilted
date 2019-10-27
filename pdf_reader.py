@@ -1,15 +1,18 @@
 import fitz
 from PIL import Image, ImageTk
-import time
 import tkinter as tk
+import os
 
-class PDF():
+class PDFReader():
     page_index = 0
     pages = 0
     canvas = None
     root = None
-    page_file = 'pg.png'
+    page_file = None
+    dir = None
     def __init__(self, filename):
+        self.dir = os.path.dirname(os.path.abspath(__file__))
+        self.page_file = os.path.join(self.dir, "pg.png")
         self.file = filename
         self.doc = fitz.open(filename)
         self.pages = self.doc.pageCount
@@ -18,8 +21,16 @@ class PDF():
         self.canvas.pack()
         self.showPage()
 
-    def turnPage(self):
+    def turnForward(self):
         self.page_index = min(self.page_index + 1, self.pages - 1)
+        self.showPage()
+
+    def turnBackward(self):
+        self.page_index = max(self.page_index - 1, 0)
+        self.showPage()
+
+    def goToPage(self, i):
+        self.page_index = max(0, min(i, self.pages - 1))
         self.showPage()
 
     def showPage(self):
@@ -37,11 +48,3 @@ class PDF():
 
     def closeWindow(self):
         self.root.destroy()
-
-
-pdf = PDF('test.pdf')
-for i in range(4):
-    time.sleep(2)
-    pdf.turnPage()
-time.sleep(1)
-pdf.closeWindow()
