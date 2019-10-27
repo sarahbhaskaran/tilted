@@ -46,5 +46,5 @@ class PDFReader():
         self.root.update_idletasks()
         self.root.update()
 
-    def closeWindow(self):
-        self.root.destroy()
+    # def closeWindow(self):
+    #     self.root.destroy()
