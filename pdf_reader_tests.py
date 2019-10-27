@@ -19,7 +19,7 @@ def main(filename = 'test.pdf'):
     time.sleep(1)
     # Should go to page 0
     pdf.goToPage(-1)
-    pdf.closeWindow()
+    # pdf.closeWindow()
 
 if __name__=="__main__":
     main()
