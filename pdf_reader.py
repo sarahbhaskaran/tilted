@@ -40,9 +40,9 @@ class PDFReader():
 
         self.canvas.config(height=pix.height, width=pix.width)
         open_image = Image.open(self.page_file)
-        img = ImageTk.PhotoImage(open_image)
+        img = ImageTk.PhotoImage(open_image, master=self.canvas)
 
-        self.canvas.create_image(20,20, anchor=tk.NW, image=img)
+        self.canvas.create_image(0,0, anchor=tk.NW, image=img)
         self.root.update_idletasks()
         self.root.update()
 
