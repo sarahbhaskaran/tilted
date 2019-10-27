@@ -111,6 +111,7 @@ class Tilted_Cam:
         DO NOT CALL THIS FUNCTION IF NOT THIS MODULE
         '''
         self.angle_baseline /= self.calibration_duration
+        print('Recalibration complete: {}'.format(self.angle_baseline))
 
     def get_tilt(self, visualize = False, debug = False):
         '''
