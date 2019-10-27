@@ -23,15 +23,15 @@ class Tilted_Cam:
     RIGHT_EYE_INDEX = 2
     LEFT_EAR_INDEX = 3
     RIGHT_EAR_INDEX = 4
-    def __init__(self, tfsess ,thres = 20, ear_thres = 0.1, calib_dur = 10):
+    def __init__(self, tf_session, tilt_threshold = 20, ear_threshold = 0.1, calibration_duration = 10):
         self.keypoint_scores = None
         self.keypoint_coords = None
-        self.tilt_threshold = thres
-        self.ear_threshold = ear_thres
-        self.calibration_duration = calib_dur
+        self.tilt_threshold = tilt_threshold
+        self.ear_threshold = ear_threshold
+        self.calibration_duration = calibration_duration
         self.frame_count = 0
         self.angle_baseline = 0
-        self.tf_session = tfsess
+        self.tf_session = tf_session
 
         self.model_cfg, self.model_outputs = posenet.load_model(args.model, self.tf_session)
         self.output_stride = self.model_cfg['output_stride']
@@ -112,7 +112,7 @@ class Tilted_Cam:
         '''
         self.angle_baseline /= self.calibration_duration
 
-    def get_tilt(self, visualize = True):
+    def get_tilt(self, visualize = False, debug = False):
         '''
         Returns: 'left', 'right', or ''
         '''
@@ -150,12 +150,13 @@ class Tilted_Cam:
         else:
             tilt = ''
 
-        if visualize:
+        if debug:
             if tilt:
                 print('{} tilt detected!'.format(tilt))
             else:
                 print('.')
                 print()
+        if visualize:
             # TODO this isn't particularly fast, use GL for drawing and display someday...
             overlay_image = posenet.draw_skel_and_kp(
                 display_image, pose_scores, self.keypoint_scores, self.keypoint_coords,
