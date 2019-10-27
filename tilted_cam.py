@@ -2,6 +2,7 @@ import tensorflow as tf
 import cv2
 import time
 import argparse
+from pdf_reader import PDFReader
 
 import posenet
 import numpy as np
@@ -22,7 +23,7 @@ class Tilted_Cam:
     RIGHT_EYE_INDEX = 2
     LEFT_EAR_INDEX = 3
     RIGHT_EAR_INDEX = 4
-    def __init__(self, thres = 20, ear_thres = 0.1, calib_dur = 10):
+    def __init__(self, tfsess ,thres = 20, ear_thres = 0.1, calib_dur = 10):
         self.keypoint_scores = None
         self.keypoint_coords = None
         self.tilt_threshold = thres
@@ -30,10 +31,17 @@ class Tilted_Cam:
         self.calibration_duration = calib_dur
         self.frame_count = 0
         self.angle_baseline = 0
+        self.tf_session = tfsess
 
-    def update_predictions(self, ks, kc, output_scale):
-        self.keypoint_scores = ks
-        self.keypoint_coords = kc * output_scale
+        self.model_cfg, self.model_outputs = posenet.load_model(args.model, self.tf_session)
+        self.output_stride = self.model_cfg['output_stride']
+
+        if args.file is not None:
+            self.cap = cv2.VideoCapture(args.file)
+        else:
+            self.cap = cv2.VideoCapture(args.cam_id)
+        self.cap.set(3, args.cam_width)
+        self.cap.set(4, args.cam_height)
 
     def get_keypoint(self, keypoint_name, pose_index):
         '''
@@ -76,19 +84,6 @@ class Tilted_Cam:
         left_ear = self.keypoint_scores[self.get_principal_index(), Tilted_Cam.LEFT_EAR_INDEX]
         return left_ear < self.ear_threshold or right_ear < self.ear_threshold
 
-    def get_tilt(self, pose_index):
-        '''
-        Returns: 'left', 'right', or ''
-        '''
-        is_turned = self.is_turned(pose_index)
-
-        if self.get_angle(pose_index) > self.tilt_threshold + self.angle_baseline and not is_turned:
-            return 'left'
-        elif self.get_angle(pose_index) < -1 * self.tilt_threshold + self.angle_baseline and not is_turned:
-            return 'right'
-        else:
-            return ''
-
     def get_principal_index(self):
         num_poses = self.keypoint_coords.shape[0]
         max_index = 0
@@ -117,66 +112,54 @@ class Tilted_Cam:
         '''
         self.angle_baseline /= self.calibration_duration
 
+    def get_tilt(self, visualize = True):
+        '''
+        Returns: 'left', 'right', or ''
+        '''
+        input_image, display_image, output_scale = posenet.read_cap(
+            self.cap, scale_factor=args.scale_factor, output_stride=self.output_stride)
 
-    def watch(self):
-        with tf.Session() as sess:
-            model_cfg, model_outputs = posenet.load_model(args.model, sess)
-            output_stride = model_cfg['output_stride']
+        heatmaps_result, offsets_result, displacement_fwd_result, displacement_bwd_result = self.tf_session.run(
+            self.model_outputs,
+            feed_dict={'image:0': input_image}
+        )
 
-            if args.file is not None:
-                cap = cv2.VideoCapture(args.file)
+        pose_scores, self.keypoint_scores, self.keypoint_coords = posenet.decode_multi.decode_multiple_poses(
+            heatmaps_result.squeeze(axis=0),
+            offsets_result.squeeze(axis=0),
+            displacement_fwd_result.squeeze(axis=0),
+            displacement_bwd_result.squeeze(axis=0),
+            output_stride=self.output_stride,
+            max_pose_detections=10,
+            min_pose_score=0.15)
+        self.keypoint_coords *= output_scale
+
+        if self.frame_count < 5:
+            self.angle_baseline += self.get_angle(self.get_principal_index())
+            self.frame_count += 1
+        elif self.frame_count == 5:
+            self._calibrate()
+            self.frame_count += 1
+
+        is_turned = self.is_turned(pose_index)
+        if self.get_angle(pose_index) > self.tilt_threshold + self.angle_baseline and not is_turned:
+            tilt = 'left'
+        elif self.get_angle(pose_index) < -1 * self.tilt_threshold + self.angle_baseline and not is_turned:
+            tilt = 'right'
+        else:
+            tilt = ''
+
+        if visualize:
+            if tilt:
+                print('{} tilt detected!'.format(tilt))
             else:
-                cap = cv2.VideoCapture(args.cam_id)
-            cap.set(3, args.cam_width)
-            cap.set(4, args.cam_height)
-
-            start = time.time()
-
-            while True:
-                input_image, display_image, output_scale = posenet.read_cap(
-                    cap, scale_factor=args.scale_factor, output_stride=output_stride)
-
-                heatmaps_result, offsets_result, displacement_fwd_result, displacement_bwd_result = sess.run(
-                    model_outputs,
-                    feed_dict={'image:0': input_image}
-                )
-
-                pose_scores, keypoint_scores, keypoint_coords = posenet.decode_multi.decode_multiple_poses(
-                    heatmaps_result.squeeze(axis=0),
-                    offsets_result.squeeze(axis=0),
-                    displacement_fwd_result.squeeze(axis=0),
-                    displacement_bwd_result.squeeze(axis=0),
-                    output_stride=output_stride,
-                    max_pose_detections=10,
-                    min_pose_score=0.15)
-                self.update_predictions(keypoint_scores, keypoint_coords, output_scale)
-
-                if self.frame_count < 5:
-                    self.angle_baseline += self.get_angle(self.get_principal_index())
-                    self.frame_count += 1
-                elif self.frame_count == 5:
-                    self._calibrate()
-                    self.frame_count += 1
-
-                tilt = self.get_tilt(self.get_principal_index())
-                if tilt:
-                    print('{} tilt detected!'.format(tilt))
-                else:
-                    pass
-                print(self.angle_baseline)
-
+                print('.')
                 print()
+            # TODO this isn't particularly fast, use GL for drawing and display someday...
+            overlay_image = posenet.draw_skel_and_kp(
+                display_image, pose_scores, self.keypoint_scores, self.keypoint_coords,
+                min_pose_score=0.15, min_part_score=0.1)
 
-                # TODO this isn't particularly fast, use GL for drawing and display someday...
-                overlay_image = posenet.draw_skel_and_kp(
-                    display_image, pose_scores, self.keypoint_scores, self.keypoint_coords,
-                    min_pose_score=0.15, min_part_score=0.1)
+            cv2.imshow('posenet', overlay_image)
 
-                cv2.imshow('posenet', overlay_image)
-
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    break
-
-if __name__ == "__main__":
-    cam = Tilted_Cam()
-    cam.watch()
+        return tilt
