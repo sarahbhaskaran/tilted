@@ -26,6 +26,8 @@ class DesktopGui():
         self.window.columnconfigure(1, weight=1)
         self.window.columnconfigure(2, weight=1)
         self.window.columnconfigure(3, weight=1)
+        #self.window.rowconfigure(0, weight=1)
+        self.window.rowconfigure(1, weight=1)
         file_btn = Button(self.window, text="Choose File", command = self.clickFinder)
         file_btn.grid(column=0, row=0)
         start_btn = Button(self.window, text="Start", command = self.clickStart)
@@ -78,7 +80,16 @@ class DesktopGui():
         Ask PDFReader for page to draw
         '''
         open_image = Image.open(self.reader.getPagePath())
-        img = ImageTk.PhotoImage(open_image)
+        image_ratio = open_image.width / open_image.height
+        dh = self.last_height - open_image.height
+        dw = self.last_width - open_image.width
+        if dw > dh:
+            resized = open_image.resize((int(self.last_height * image_ratio), self.last_height), Image.ANTIALIAS)
+        else:
+            resized = open_image.resize((self.last_width, int(self.last_height // image_ratio)), Image.ANTIALIAS)
+
+
+        img = ImageTk.PhotoImage(resized)
 
         # self.canvas = tk.Canvas(master)
         # self.img = ImageTk.PhotoImage(Image.open(self.dir), master=self.canvas)
@@ -92,7 +103,7 @@ class DesktopGui():
 
         self.canvas = tk.Canvas(self.window)
         self.canvas.config(height=self.window.winfo_screenheight(), width=self.window.winfo_screenwidth())
-        self.img = ImageTk.PhotoImage(open_image, master=self.canvas)
+        self.img = ImageTk.PhotoImage(resized, master=self.canvas)
         self.canvas.create_image(self.last_width//2 ,self.last_height//2, image=self.img)
         self.canvas.grid(columnspan = 4, row = 2)
 
