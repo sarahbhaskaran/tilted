@@ -8,17 +8,13 @@ class PDFReader():
     def __init__(self, filename):
         self.dir = os.path.dirname(os.path.abspath(__file__))
         self.page_file = os.path.join(self.dir, "pg.png")
+        if os.path.exists(self.page_file):
+            os.remove(self.page_file)
         self.file = filename
         self.doc = fitz.open(filename)
         self.pages = self.doc.pageCount
         self.page_index = 0
         self.goToPage(0)
-
-
-        # self.root = tk.Tk()
-        # self.canvas = tk.Canvas(self.root)
-        # self.canvas.pack()
-        # self.showPage()
 
     def turnForward(self):
         self.page_index = min(self.page_index + 1, self.pages - 1)

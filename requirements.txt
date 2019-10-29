@@ -1,4 +1,4 @@
 PyMuPDF
 Pillow
 opencv-python
-tensorflow-gpu
+tensorflow-gpu==1.14
