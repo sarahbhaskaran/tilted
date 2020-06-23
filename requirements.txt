@@ -2,3 +2,4 @@ PyMuPDF
 Pillow
 opencv-python
 tensorflow-gpu==1.15.0
+PyYaml

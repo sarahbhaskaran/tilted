@@ -1,0 +1,21 @@
+img {
+    /* max-width: ;
+    max-height: 1100; */
+    width: auto;
+    height: 100vh;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.left-buttons {
+    display: table;
+    float: left;
+}
+
+.right-buttons {
+    float: right;
+    display: table;
+}

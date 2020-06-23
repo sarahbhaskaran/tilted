@@ -7,7 +7,7 @@
   body {
     padding: 0;
     margin: 0;
-    background:#00AAFF
+    background:rgb(8, 31, 68)
     }
 
   .buttons > button {
@@ -56,4 +56,5 @@
     color: rgba(255, 255, 255, .75);
     font-size: 1.5rem;
   }
+
   

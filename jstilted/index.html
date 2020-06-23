@@ -6,17 +6,38 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Tilted</title>
   <link href="styles.css" rel="stylesheet">
+  <link href="layout.css" rel="stylesheet">
   <script src="script.js" defer></script>
+  <script src="pdfdisplay.js" defer></script>
+  <script src="build/pdf.js"></script>
 </head>
 <body>
-  <div class = .buttons>
-    <button data-choose>Choose File</button>
-    <button data-start>Start</button>
-    <button data-recalibrate>Recalibrate</button>
-    <button data-forward>Forward</button>
-    <button data-back>Back</button>
-    <img src="input/example.png" width="128" height ="128" />
-    
+  <div id="left-buttons" class = .buttons>
+    <button class="left-button" data-choose>Choose File</button>
+    <button class="left-button" data-start>Start</button>
+    <button class="left-button" data-recalibrate>Recalibrate</button>
   </div>
+
+  <div class="container"><img src="input/example.png" width="128" height ="128" /></div>
+
+  <div id="right-buttons" class=.buttons>
+    <button class="right-button" data-forward>Forward</button>
+    <button class="right-button" data-back>Back</button>
+    <form>
+      <input type="text" id="goToPage" name="goToPage"/>
+      <input type="submit" value="Jump To"/>
+    </form>
+  </div>
+
+  <!-- <div id="pdf-main-container">
+    <div id="pdf-loader">Loading document ...</div>
+    <div id="pdf-contents">
+        <div id="pdf-meta">
+            <div id="page-count-container">Page <div id="pdf-current-page"></div> of <div id="pdf-total-pages"></div></div>
+        </div>
+        <canvas id="pdf-canvas" width="400"></canvas>
+        <div id="page-loader">Loading page ...</div>
+    </div> -->
+</div>
 </body>
 </html>

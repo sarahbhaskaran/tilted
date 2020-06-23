@@ -4,6 +4,9 @@ class main {
     }
     run() {
         console.log("progress")
+        const pdfd = new pdfdisplay();
+        pdfd.showPage();
+        console.log('showed page');
         return 
      }
 }
