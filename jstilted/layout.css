@@ -3,19 +3,40 @@ img {
     max-height: 1100; */
     width: auto;
     height: 100vh;
-    display: block;
+    /* display: table;
     margin-left: auto;
     margin-right: auto;
-    margin-top: auto;
-    margin-bottom: auto;
+    margin-top: 0;
+    margin-bottom: 0; */
 }
 
-.left-buttons {
-    display: table;
-    float: left;
+body {
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
 }
 
-.right-buttons {
-    float: right;
-    display: table;
+body > * {
+    position: absolute;
+    /* position: fixed; */
+    /* position: relative; */
 }
+
+
+#left-buttons {
+    left: 25%;
+    display: inline-block;
+    align-items: right;
+}
+
+#right-buttons {
+    right: 20%;
+    display: inline-block;
+}
+
