@@ -33,6 +33,7 @@ body > * {
     left: 25%;
     display: inline-block;
     align-items: right;
+    z-index: 2;
 }
 
 #right-buttons {
