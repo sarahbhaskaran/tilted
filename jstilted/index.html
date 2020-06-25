@@ -7,18 +7,23 @@
   <title>Tilted</title>
   <link href="styles.css" rel="stylesheet">
   <link href="layout.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.5.207/pdf.js"> </script>
   <script src="script.js" defer></script>
   <script src="pdfdisplay.js" defer></script>
   <script src="build/pdf.js"></script>
+ 
 </head>
 <body>
   <div id="left-buttons" class = .buttons>
-    <button class="left-button" id="data-choose" data-choose>Choose File</button> <br/>
+    <input type="file" id="file"/>
+    <h2>Rendered pdf:</h2>
+    <canvas id="pdfCanvas" width="auto" height="100vh"></canvas>
+    <!-- <button class="left-button" id="data-choose" data-choose>Choose File</button> <br/> -->
     <button class="left-button" data-start>Start</button><br/>
     <button class="left-button" data-recalibrate>Recalibrate</button>
   </div>
 
-  <div class="container"><img src="input/example.png" width="128" height ="128" /></div>
+  <!-- <div class="container"><img src="input/example.png" width="128" height ="128" /></div> -->
 
   <div id="right-buttons" class=.buttons>
     <button class="right-button" data-forward>Forward</button><br/>
@@ -39,5 +44,7 @@
         <div id="page-loader">Loading page ...</div>
     </div>
   </div> -->
+ 
+
 </body>
 </html>
