@@ -43,7 +43,7 @@ realFileBtn.addEventListener("click", function() {
         pdf.getPage(1).then(function(page) {
             console.log('Page loaded');
 
-            var scale = 1.5;
+            var scale = .7;
             var viewport = page.getViewport({
             scale: scale
             });
@@ -75,16 +75,17 @@ realFileBtn.addEventListener("click", function() {
 
 
 
-chooseFileButton.addEventListener('click', button => {
-    console.log("choose file")
-    //initialize pdf
-    pdf = "hello"//= new pdfdisplay()
-    //call method in choose File file
-})
+// chooseFileButton.addEventListener('click', button => {
+//     console.log("choose file")
+//     //initialize pdf
+//     pdf = "hello"//= new pdfdisplay()
+//     //call method in choose File file
+// })
 
 startButton.addEventListener('click', button => {
     console.log("start")
-    session.run()
+    openFullscreen();
+    // session.run()
     //call start loop
     //probably calls the loop in this file
 })
@@ -103,3 +104,33 @@ forwardButton.addEventListener('click', button => {
 backButton.addEventListener('click', button=> {
     pdf.back()
 })
+
+/* Get the documentElement (<html>) to display the page in fullscreen */
+var elem = document.getElementById("pdfCanvas");
+
+/* View in fullscreen */
+function openFullscreen() {
+    console.log("Fullscreen function");
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.mozRequestFullScreen) { /* Firefox */
+    elem.mozRequestFullScreen();
+  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE/Edge */
+    elem.msRequestFullscreen();
+  }
+}
+
+/* Close fullscreen */
+function closeFullscreen() {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.mozCancelFullScreen) { /* Firefox */
+    document.mozCancelFullScreen();
+  } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+    document.webkitExitFullscreen();
+  } else if (document.msExitFullscreen) { /* IE/Edge */
+    document.msExitFullscreen();
+  }
+}
