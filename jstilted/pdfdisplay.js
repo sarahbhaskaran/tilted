@@ -13,7 +13,9 @@ realFileBtn.addEventListener("click", function() {
     console.log("getting here")
 
     document.getElementById('file').onchange = function(event) {
+        
     file = event.target.files[0];
+    console.log(totalPages);
     fileReader = new FileReader();
     currPageNumber = 1;
     fileReader.onload = render;
@@ -21,10 +23,35 @@ realFileBtn.addEventListener("click", function() {
     }
 });
 
-function second() {
-    console.log("second");
-    currPageNumber = 2;
-    render();
+function next() {
+    if (inPageRange(currPageNumber + 1)) {
+        totalPages = fileReader.numPages;
+        console.log(totalPages)
+        totalPages = pdfDoc.numPages;
+        console.log(totalPages)
+        totalPages = 4;
+        console.log(totalPages)
+        currPageNumber += 1;
+        render();
+    }
+}
+
+function back() {
+    if (inPageRange(currPageNumber - 1)) {
+        currPageNumber -= 1;
+        render();
+    }
+    
+}
+
+function inPageRange(pageNumber) {
+    if (pageNumber < 1) {
+        return false
+    }
+    if (pageNumber > totalPages) {
+        return false
+    }
+    return true;
 }
 
 function render() {
@@ -63,9 +90,9 @@ function render() {
 
 
 forwardButton.addEventListener('click', button => {
-    second();
+    next();
 })
 
 backButton.addEventListener('click', button=> {
-    
+    back()
 })
