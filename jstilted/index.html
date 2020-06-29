@@ -13,23 +13,23 @@
  
 </head>
 <body>
+  <input type="file" id="file" hidden="hidden"/><br/>
   <div id="left-buttons" class = .buttons>
-    <input type="file" id="file"/>
-    <h2>Rendered pdf:</h2>
-    <canvas id="pdfCanvas" width="auto" height="100vh"></canvas>
-    <!-- <button class="left-button" id="data-choose" data-choose>Choose File</button> <br/> -->
+    <button class="left-button" id="data-choose" data-choose>Choose File</button> <br/>
     <button class="left-button" data-start>Start</button><br/>
     <button class="left-button" data-recalibrate>Recalibrate</button>
   </div>
 
-  <!-- <div class="container"><img src="input/example.png" width="128" height ="128" /></div> -->
+  <canvas id="pdfCanvas" width="auto" height="100vh"></canvas>
+  <img src="input/example.png" id="temp_img"/>
+
 
   <div id="right-buttons" class=.buttons>
     <button class="right-button" data-forward>Forward</button><br/>
     <button class="right-button" data-back>Back</button>
-    <form>
+    <form class="right-button">
+      <input type="button" id="jumpTo" value="Jump To"/><br/>
       <input type="text" id="goToPage" name="goToPage"/>
-      <input type="submit" value="Jump To"/>
     </form>
   </div>
 

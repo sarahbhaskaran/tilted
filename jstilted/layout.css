@@ -3,41 +3,45 @@ img {
     max-height: 1100; */
     width: auto;
     height: 100vh;
-    /* display: table;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 0;
+    /* display: table; */
+    /* margin-left: auto;
+    margin-right: auto; */
+    /* margin-top: 0;
     margin-bottom: 0; */
 }
 
 body {
-    margin-left: auto;
-    margin-right: auto;
-    position: relative;
+    /* margin-left: auto;
+    margin-right: auto; */
+    /* position: relative; */
     display: flex;
-    flex-direction: column;
+    flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
-    text-align: center;
-    min-height: 100vh;
+    /* text-align: center; */
+    /* min-height: 100vh; */
 }
 
 body > * {
-    position: absolute;
+    /* position: absolute; */
     /* position: fixed; */
     /* position: relative; */
 }
 
 
 #left-buttons {
-    left: 25%;
-    display: inline-block;
-    align-items: right;
     z-index: 2;
 }
 
+.left-button {
+}
+
+canvas {
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
 #right-buttons {
-    right: 20%;
-    display: inline-block;
+    z-index: 2; 
 }
 

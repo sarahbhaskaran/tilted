@@ -18,19 +18,46 @@ realFileBtn.addEventListener("click", function() {
     currPageNumber = 1;
     fileReader.onload = render;
     fileReader.readAsArrayBuffer(file);
+    const img = document.getElementById("temp_img");
+    img.style.display = "none";
+    const canvas = document.getElementById("pdfCanvas");
+    canvas.style.display = "inherit";
+    console.log("should have disappeared");
     }
 });
 
-function second() {
-    console.log("second");
-    currPageNumber = 2;
-    render();
+function next() {
+    if (inPageRange(currPageNumber + 1)) {
+        totalPages = 4;
+        currPageNumber += 1;
+        render();
+    }
 }
+
+function back() {
+    if (inPageRange(currPageNumber - 1)) {
+        currPageNumber -= 1;
+        render();
+    }
+    
+}
+
+function inPageRange(pageNumber) {
+    if (pageNumber < 1) {
+        return false
+    }
+    if (pageNumber > totalPages) {
+        return false
+    }
+    return true;
+}
+
 
 function render() {
     var typedarray = new Uint8Array(fileReader.result);
     const loadingTask = pdfjsLib.getDocument(typedarray);
     loadingTask.promise.then(pdf => {
+        totalPages = pdf.numPages;
     // The document is loaded here...
     //This below is just for demonstration purposes showing that it works with the moderen api
     pdf.getPage(currPageNumber).then(function(page) {
@@ -56,6 +83,8 @@ function render() {
         });
 
     });
+    console.log("num pages");
+    console.log(loadingTask.numPages);
     //end of example code
     });
 
@@ -63,9 +92,14 @@ function render() {
 
 
 forwardButton.addEventListener('click', button => {
-    second();
+    next();
 })
 
 backButton.addEventListener('click', button=> {
-    
+    back();
+})
+
+const choose = document.querySelector('[data-choose]');
+choose.addEventListener("click", function() {
+    realFileBtn.click();
 })

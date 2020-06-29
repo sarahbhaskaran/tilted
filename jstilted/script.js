@@ -18,7 +18,8 @@ class main {
 
 
 
-
+const canvas = document.getElementById("pdfCanvas");
+canvas.style.display = "none";
 //const chooseFileButton = document.querySelector('[data-choose]')
 const startButton = document.querySelector('[data-start]')
 const recalibrateButton = document.querySelector('[data-recalibrate]')
@@ -102,17 +103,6 @@ recalibrateButton.addEventListener('click', button => {
     //call loop again
     console.log("recalibrate")
     session.run()
-})
-
-forwardButton.addEventListener('click', button => {
-    console.log("getting to forward");
-    second();
-    console.log("left");
-    pdf.forward()
-})
-
-backButton.addEventListener('click', button=> {
-    pdf.back()
 })
 
 /* Get the documentElement (<html>) to display the page in fullscreen */
