@@ -1,3 +1,5 @@
+
+
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.5.207/pdf.worker.js';
 class main {
     constructor() {
@@ -15,24 +17,67 @@ class main {
 
 
 
+
+
 //const chooseFileButton = document.querySelector('[data-choose]')
 const startButton = document.querySelector('[data-start]')
 const recalibrateButton = document.querySelector('[data-recalibrate]')
-const forwardButton = document.querySelector('[data-forward]')
-const backButton = document.querySelector('[data-back]')
-const realFileBtn = document.getElementById("file");
-const customBtn = document.getElementById("custom-button");
+var pdf = document.querySelector('[data-pdf]')
+
 const session = new main()
 var pdf;
 
 
-realFileBtn.addEventListener("click", function() {
-    console.log("getting here")
+// realFileBtn.addEventListener("click", function() {
+//     console.log("getting here")
+
+//     document.getElementById('file').onchange = function(event) {
+//     var file = event.target.files[0];
+//     console.log(file);
+//     var fileReader = new FileReader();
+//     console.log("hello")
+//     console.log(fileReader);
+//     console.log("bye")
     
-    document.getElementById('file').onchange = function(event) {
-        pdf = new pdfdisplay(event.target.files[0]);
-    }
-});
+//     fileReader.onload = function() {
+//         var typedarray = new Uint8Array(this.result);
+//         console.log(this)
+//         console.log(typedarray);
+//         const loadingTask = pdfjsLib.getDocument(typedarray);
+//         loadingTask.promise.then(pdf => {
+//         // The document is loaded here...
+//         //This below is just for demonstration purposes showing that it works with the moderen api
+//         pdf.getPage(1).then(function(page) {
+//             console.log('Page loaded');
+
+//             var scale = .7;
+//             var viewport = page.getViewport({
+//             scale: scale
+//             });
+
+//             var canvas = document.getElementById('pdfCanvas');
+//             var context = canvas.getContext('2d');
+//             canvas.height = viewport.height;
+//             canvas.width = viewport.width;
+
+//             // Render PDF page into canvas context
+//             var renderContext = {
+//             canvasContext: context,
+//             viewport: viewport
+//             };
+//             var renderTask = page.render(renderContext);
+//             renderTask.promise.then(function() {
+//             console.log('Page rendered');
+//             });
+
+//         });
+//         //end of example code
+//         });
+
+//     }
+//     fileReader.readAsArrayBuffer(file);
+//     }
+// });
 
 
 
@@ -60,6 +105,9 @@ recalibrateButton.addEventListener('click', button => {
 })
 
 forwardButton.addEventListener('click', button => {
+    console.log("getting to forward");
+    second();
+    console.log("left");
     pdf.forward()
 })
 
