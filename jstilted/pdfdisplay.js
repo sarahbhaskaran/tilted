@@ -2,15 +2,23 @@
 
 const realFileBtn = document.getElementById("file");
 const customBtn = document.getElementById("custom-button");
-const forwardButton = document.querySelector('[data-forward]')
-const backButton = document.querySelector('[data-back]')
+const forwardButton = document.querySelector('[data-forward]');
+const backButton = document.querySelector('[data-back]');
+const jumpButton = document.getElementById("goToButton");
 var file;
 var fileReader;
 var totalPages;
 var currPageNumber;
 
+
+const choose = document.querySelector('[data-choose]');
+choose.addEventListener("click", function() {
+    realFileBtn.click();
+})
+
+
+
 realFileBtn.addEventListener("click", function() {
-    console.log("getting here")
 
     document.getElementById('file').onchange = function(event) {
         
@@ -25,13 +33,16 @@ realFileBtn.addEventListener("click", function() {
 
 function next() {
     if (inPageRange(currPageNumber + 1)) {
-        totalPages = fileReader.numPages;
-        console.log(totalPages)
-        totalPages = pdfDoc.numPages;
-        console.log(totalPages)
-        totalPages = 4;
-        console.log(totalPages)
         currPageNumber += 1;
+        render();
+    }
+}
+
+function goTo(n) {
+    num = parseInt(n, 10);
+    if (inPageRange(num)) {
+        console.log(num)
+        currPageNumber = num;
         render();
     }
 }
@@ -58,6 +69,7 @@ function render() {
     var typedarray = new Uint8Array(fileReader.result);
     const loadingTask = pdfjsLib.getDocument(typedarray);
     loadingTask.promise.then(pdf => {
+    totalPages = pdf.numPages;
     // The document is loaded here...
     //This below is just for demonstration purposes showing that it works with the moderen api
     pdf.getPage(currPageNumber).then(function(page) {
@@ -71,6 +83,8 @@ function render() {
         var context = canvas.getContext('2d');
         canvas.height = viewport.height;
         canvas.width = viewport.width;
+        console.log("page number");
+        console.log(loadingTask.numPages);
 
         // Render PDF page into canvas context
         var renderContext = {
@@ -95,4 +109,10 @@ forwardButton.addEventListener('click', button => {
 
 backButton.addEventListener('click', button=> {
     back()
+})
+
+jumpButton.addEventListener('click', button=> {
+    console.log("is this what I should be doing");
+    goTo(document.getElementById('goToPage').value);
+    document.getElementById('goToPage').value = "";
 })

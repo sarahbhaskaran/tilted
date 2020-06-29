@@ -103,16 +103,6 @@ recalibrateButton.addEventListener('click', button => {
     session.run()
 })
 
-forwardButton.addEventListener('click', button => {
-    console.log("getting to forward");
-    second();
-    console.log("left");
-    pdf.forward()
-})
-
-backButton.addEventListener('click', button=> {
-    pdf.back()
-})
 
 /* Get the documentElement (<html>) to display the page in fullscreen */
 var elem = document.getElementById("pdfCanvas");
