@@ -9,7 +9,7 @@ class pdfdisplay {
         this.currPage = 1;
         this.file = file;
         this.loadFile(file);
-        this.totalPage = this.fileReader.numPages;
+        this.totalPages = this.fileReader.numPages;
     }
 
     loadFile() {
