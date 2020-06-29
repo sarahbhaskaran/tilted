@@ -33,9 +33,6 @@ body > * {
     z-index: 2;
 }
 
-.left-button {
-}
-
 canvas {
     flex-grow: 0;
     flex-shrink: 0;
