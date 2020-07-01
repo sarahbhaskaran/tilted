@@ -4,7 +4,7 @@ const realFileBtn = document.getElementById("file");
 const customBtn = document.getElementById("custom-button");
 const forwardButton = document.querySelector('[data-forward]');
 const backButton = document.querySelector('[data-back]');
-const jumpButton = document.getElementById("goToButton");
+const jumpButton = document.getElementById("jumpTo");
 var file;
 var fileReader;
 var totalPages;

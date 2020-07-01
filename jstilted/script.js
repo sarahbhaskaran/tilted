@@ -6,10 +6,9 @@ class main {
         
     }
     run() {
-        console.log("progress")
-        const pdfd = new pdfdisplay();
-        pdfd.showPage();
-        console.log('showed page');
+        console.log("running");
+        this.cam = new TiltedCam();
+        console.log("created class");
         return 
      }
 }
