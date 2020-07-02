@@ -18,6 +18,12 @@
 </head>
 <body>
   <input type="file" id="file" hidden="hidden"/><br/>
+  <div>
+    <!-- Camera view -->
+    <video id="camera--view" autoplay playsinline></video>
+    <!-- Camera output -->
+    <img src="//:0" alt="" id="camera--output">
+  </div>
   <div id="left-buttons" class = .buttons>
     <button class="left-button" id="data-choose" data-choose>Choose File</button> <br/>
     <button class="left-button" data-start>Start</button><br/>

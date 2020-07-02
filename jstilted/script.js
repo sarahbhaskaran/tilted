@@ -1,15 +1,17 @@
 
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.5.207/pdf.worker.js';
+
+var tcam;
+
 class main {
     constructor() {
         
     }
     run() {
         console.log("running");
-        this.cam = new TiltedCam();
-        console.log("created class");
-        return 
+        tcam.getTilt()
+        return;
      }
 }
 
@@ -91,10 +93,12 @@ var pdf;
 
 startButton.addEventListener('click', button => {
     console.log("start")
-    openFullscreen();
+    tcam.getTilt();
+    // openFullscreen();
     // session.run()
     //call start loop
     //probably calls the loop in this file
+
 })
 
 recalibrateButton.addEventListener('click', button => {
@@ -133,3 +137,7 @@ function closeFullscreen() {
     document.msExitFullscreen();
   }
 }
+
+window.addEventListener("load", function () {
+  tcam = new TiltedCam();
+}, false);
