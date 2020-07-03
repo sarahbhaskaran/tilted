@@ -18,13 +18,13 @@ class TiltedCam {
     static LEFT_EAR_INDEX = 3;
     static RIGHT_EAR_INDEX = 4;
 
-    constructor(tf_session, tilt_threshold=20, ear_threshold=.1, calibration_duration=10) {
-        this.tilt_threshold = tilt_threshold;
-        this.ear_threshold = ear_threshold;
-        this.calibration_duration = calibration_duration;
-        this.frame_count = 0;
-        this.angle_baseline = 0;
-        this.tf_session = tf_session;
+    constructor(tfSession, tiltThreshold=20, earThreshold=.1, calibrationDuration=10) {
+        this.tiltThreshold = tiltThreshold;
+        this.earThreshold = earThreshold;
+        this.calibrationDuration = calibrationDuration;
+        this.frameCount = 0;
+        this.angleBaseline = 0;
+        this.tfSession = tfSession;
 
         this.cameraView = document.querySelector("#camera--view");
         this.cameraOutput = document.querySelector("#camera--output");
@@ -52,16 +52,32 @@ class TiltedCam {
           })
     }
 
-    getKeypoint(keypoint_name, pose_index) {
+    getKeypoint(keypointName, poseIndex) {
         try{
-            var index = posenet.PART_NAMES.index(keypoint_name);
+            var index = posenet.PART_NAMES.index(keypointName);
         }
         catch(e){
             console.log("Keypoint name not valid");
             throw(e);
         }
-        return (this.keypoint_scores[pose_index, index], 
-            this.keypoint_coords[pose_index, index]);
+        return (this.keypointScores[poseIndex, index], 
+            this.keypointCoords[poseIndex, index]);
+    }
+
+    getAngle(poseIndex){
+        this.right = this.getKeypoint('rightEye', poseIndex)[1]
+        this.left = this.getKeypoint('leftEye', poseIndex)[1]
+
+        dx = right[1] - left[1]
+        dy = right[0] - left[0]
+
+        return Math.degrees(math.atan2(dy, dx))
+    }
+
+    isTurned(pose_index){
+        rightEar = this.keypointScores[this.getPrincipalIndex(), TiltedCam.RIGHT_EAR_INDEX]
+        leftEar = this.keypointScores[this.getPrincipalIndex(), TiltedCam.LEFT_EAR_INDEX]
+        return leftEar < this.ear_threshold || rightEar < this.earThreshold
     }
 
     cameraStart() {
