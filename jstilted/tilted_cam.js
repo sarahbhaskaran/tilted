@@ -3,6 +3,8 @@ const RIGHT_EYE_INDEX = 2;
 const LEFT_EAR_INDEX = 3;
 const RIGHT_EAR_INDEX = 4;
 
+const debug = true;
+
 function sleep(milliseconds) {
     const date = Date.now();
     let currentDate = null;
@@ -11,7 +13,15 @@ function sleep(milliseconds) {
     } while (currentDate - date < milliseconds);
   }
   
+function degToRad(degrees) {
+    return degrees * (Math.PI / 180);
+};
 
+function radToDeg(rad) {
+    return rad / (Math.PI / 180);
+};
+  
+  
 class TiltedCam {
     static LEFT_EYE_INDEX = 1;
     static RIGHT_EYE_INDEX = 2;
@@ -49,34 +59,56 @@ class TiltedCam {
             return pose;
           }.bind(this)).then(function(pose){
             console.log(pose);
-          })
+            this.pose = pose;
+            this.calculateTilt();
+          }.bind(this))
     }
 
-    getKeypoint(keypointName, poseIndex) {
-        try{
-            var index = posenet.PART_NAMES.index(keypointName);
+    calculateTilt() {
+        if (this.frameCount < 5) {
+            this.angleBaseline += this.getAngle()
+            this.frameCount++;
         }
-        catch(e){
-            console.log("Keypoint name not valid");
-            throw(e);
+        else if (this.frameCount == 5) {
+            this.calibrate()
+            this.frameCount++;
         }
-        return (this.keypointScores[poseIndex, index], 
-            this.keypointCoords[poseIndex, index]);
+
+        var isTurn = this.isTurned();
+        var tilt;
+        if(this.getAngle() > this.tiltThreshold + this.angleBaseline && !isTurn) {
+            tilt = 'left';
+        }
+        else if (this.getAngle() < -1*this.tiltThreshold + this.angleBaseline && !isTurn) {
+            tilt = 'right';
+        }
+        else {
+            tilt = '';
+        }
+        if (debug) {
+            if (tilt) {
+                console.log(tilt+' tilt detected!');
+            }
+            else {
+                console.log('.')
+            }
+        }
     }
 
-    getAngle(poseIndex){
-        this.right = this.getKeypoint('rightEye', poseIndex)[1]
-        this.left = this.getKeypoint('leftEye', poseIndex)[1]
+    getAngle(){
+        console.log(this.pose)
+        const right = this.pose['keypoints'][RIGHT_EYE_INDEX]['position']
+        const left = this.pose['keypoints'][LEFT_EYE_INDEX]['position']
 
-        dx = right[1] - left[1]
-        dy = right[0] - left[0]
+        const dx = right['x'] - left['x']
+        const dy = right['y'] - left['y']
 
-        return Math.degrees(math.atan2(dy, dx))
+        return radToDeg(Math.atan2(dy, dx))
     }
 
-    isTurned(pose_index){
-        rightEar = this.keypointScores[this.getPrincipalIndex(), TiltedCam.RIGHT_EAR_INDEX]
-        leftEar = this.keypointScores[this.getPrincipalIndex(), TiltedCam.LEFT_EAR_INDEX]
+    isTurned(){
+        const rightEar = this.pose['keypoints'][RIGHT_EAR_INDEX]['score']
+        const leftEar = this.pose['keypoints'][LEFT_EAR_INDEX]['score']
         return leftEar < this.ear_threshold || rightEar < this.earThreshold
     }
 
