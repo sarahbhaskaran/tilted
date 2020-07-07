@@ -20,24 +20,6 @@ function sleep(milliseconds) {
   } while (currentDate - date < milliseconds);
 }
 
-
-
-async function run() {
-  temp = 0;
-  while (temp < 5) {
-    console.log("start")
-    result = await tcam.getTilt();
-    console.log(result);
-    // if (result == "right") {
-    //   pdfdisplay.next();
-    // }
-    // if (result == "left") {
-    //   pdfdisplay.back();
-    // }
-    temp++;
-  }
-}
-
 startButton.addEventListener('click', button => {
     // started = true;
     tcam.toggleRunning();
