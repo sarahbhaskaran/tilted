@@ -39,8 +39,10 @@ class TiltedCam {
         this.cameraView = document.querySelector("#camera--view");
         this.cameraOutput = document.querySelector("#camera--output");
         this.cameraSensor = document.querySelector("#camera--sensor");
-
+        this.cameraView.width = 500;
+        this.cameraView.height = 500;
         const net = posenet.load();
+        
 
         if (!('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices)) {
             console.log("error with video");
@@ -50,7 +52,7 @@ class TiltedCam {
         // this.getTilt();
     }
 
-    getTilt() {
+    async getTilt() {
         posenet.load().then(function(net) {
             const pose = net.estimateSinglePose(this.cameraView, {
               flipHorizontal: true
@@ -62,6 +64,17 @@ class TiltedCam {
             this.pose = pose;
             this.calculateTilt();
           }.bind(this))
+          console.log("here");
+          var result = this.tilt;
+          if (result == "right") {
+            console.log("right");
+            pdfdisplay.next();
+          }
+          if (result == "left") {
+            console.log("left");
+            pdfdisplay.back();
+          }
+          return this.tilt;
     }
 
     calculateTilt() {
@@ -75,19 +88,19 @@ class TiltedCam {
         }
 
         var isTurn = this.isTurned();
-        var tilt;
+        this.tilt;
         if(this.getAngle() > this.tiltThreshold + this.angleBaseline && !isTurn) {
-            tilt = 'left';
+            this.tilt = 'right';
         }
         else if (this.getAngle() < -1*this.tiltThreshold + this.angleBaseline && !isTurn) {
-            tilt = 'right';
+            this.tilt = 'left';
         }
         else {
-            tilt = '';
+            this.tilt = '';
         }
         if (debug) {
-            if (tilt) {
-                console.log(tilt+' tilt detected!');
+            if (this.tilt) {
+                console.log(this.tilt+' tilt detected!');
             }
             else {
                 console.log('.')
@@ -96,7 +109,6 @@ class TiltedCam {
     }
 
     getAngle(){
-        console.log(this.pose)
         const right = this.pose['keypoints'][RIGHT_EYE_INDEX]['position']
         const left = this.pose['keypoints'][LEFT_EYE_INDEX]['position']
 
@@ -124,6 +136,10 @@ class TiltedCam {
         {
             console.error("Oops. Something is broken.", error);
         });
+    }
+
+    calibrate() {
+        this.angleBaseline /= this.calibrationDuration;
     }
 
     

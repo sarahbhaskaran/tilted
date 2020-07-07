@@ -3,101 +3,45 @@
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.5.207/pdf.worker.js';
 
 var tcam;
-
-class main {
-    constructor() {
-        
-    }
-    run() {
-        console.log("running");
-        tcam.getTilt()
-        return;
-     }
-}
-
-
-
-
-
 const canvas = document.getElementById("pdfCanvas");
 canvas.style.display = "none";
-//const chooseFileButton = document.querySelector('[data-choose]')
 const startButton = document.querySelector('[data-start]')
 const recalibrateButton = document.querySelector('[data-recalibrate]')
 var pdf = document.querySelector('[data-pdf]')
 
-const session = new main()
 var pdf;
+var started = false;
 
-
-// realFileBtn.addEventListener("click", function() {
-//     console.log("getting here")
-
-//     document.getElementById('file').onchange = function(event) {
-//     var file = event.target.files[0];
-//     console.log(file);
-//     var fileReader = new FileReader();
-//     console.log("hello")
-//     console.log(fileReader);
-//     console.log("bye")
-    
-//     fileReader.onload = function() {
-//         var typedarray = new Uint8Array(this.result);
-//         console.log(this)
-//         console.log(typedarray);
-//         const loadingTask = pdfjsLib.getDocument(typedarray);
-//         loadingTask.promise.then(pdf => {
-//         // The document is loaded here...
-//         //This below is just for demonstration purposes showing that it works with the moderen api
-//         pdf.getPage(1).then(function(page) {
-//             console.log('Page loaded');
-
-//             var scale = .7;
-//             var viewport = page.getViewport({
-//             scale: scale
-//             });
-
-//             var canvas = document.getElementById('pdfCanvas');
-//             var context = canvas.getContext('2d');
-//             canvas.height = viewport.height;
-//             canvas.width = viewport.width;
-
-//             // Render PDF page into canvas context
-//             var renderContext = {
-//             canvasContext: context,
-//             viewport: viewport
-//             };
-//             var renderTask = page.render(renderContext);
-//             renderTask.promise.then(function() {
-//             console.log('Page rendered');
-//             });
-
-//         });
-//         //end of example code
-//         });
-
-//     }
-//     fileReader.readAsArrayBuffer(file);
-//     }
-// });
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
 
 
 
-
-// chooseFileButton.addEventListener('click', button => {
-//     console.log("choose file")
-//     //initialize pdf
-//     pdf = "hello"//= new pdfdisplay()
-//     //call method in choose File file
-// })
+async function run() {
+  temp = 0;
+  while (temp < 5) {
+    console.log("start")
+    result = await tcam.getTilt();
+    console.log(result);
+    // if (result == "right") {
+    //   pdfdisplay.next();
+    // }
+    // if (result == "left") {
+    //   pdfdisplay.back();
+    // }
+    temp++;
+  }
+}
 
 startButton.addEventListener('click', button => {
-    console.log("start")
-    tcam.getTilt();
-    // openFullscreen();
-    // session.run()
-    //call start loop
-    //probably calls the loop in this file
+    started = true;
+    run();
+    console.log(tcam.getTilt());
 
 })
 
@@ -105,7 +49,7 @@ recalibrateButton.addEventListener('click', button => {
     //call method in recalibrate
     //call loop again
     console.log("recalibrate")
-    session.run()
+    started = false;
 })
 
 /* Get the documentElement (<html>) to display the page in fullscreen */
