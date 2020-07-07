@@ -3,7 +3,7 @@ const RIGHT_EYE_INDEX = 2;
 const LEFT_EAR_INDEX = 3;
 const RIGHT_EAR_INDEX = 4;
 
-const debug = true;
+const debug = false;
 
 function sleep(milliseconds) {
     const date = Date.now();
@@ -62,19 +62,20 @@ class TiltedCam {
           }.bind(this)).then(function(pose){
             console.log(pose);
             this.pose = pose;
-            this.calculateTilt();
-          }.bind(this))
-          console.log("here");
-          var result = this.tilt;
-          if (result == "right") {
-            console.log("right");
-            pdfdisplay.next();
-          }
-          if (result == "left") {
+            return this.calculateTilt();
+          }.bind(this)).then(function(result) {
+            if (result == "right") {
+                console.log("right");
+                pdfdisplay.next();
+            }
+            else if (result == "left") {
             console.log("left");
             pdfdisplay.back();
-          }
-          return this.tilt;
+            }
+            else {
+                console.log("neither");
+            }
+          }.bind(this));
     }
 
     calculateTilt() {
@@ -90,10 +91,10 @@ class TiltedCam {
         var isTurn = this.isTurned();
         this.tilt;
         if(this.getAngle() > this.tiltThreshold + this.angleBaseline && !isTurn) {
-            this.tilt = 'right';
+            this.tilt = 'left';
         }
         else if (this.getAngle() < -1*this.tiltThreshold + this.angleBaseline && !isTurn) {
-            this.tilt = 'left';
+            this.tilt = 'right';
         }
         else {
             this.tilt = '';
@@ -106,6 +107,7 @@ class TiltedCam {
                 console.log('.')
             }
         }
+        return this.tilt;
     }
 
     getAngle(){
