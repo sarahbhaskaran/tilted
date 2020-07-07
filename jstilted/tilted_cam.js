@@ -35,6 +35,10 @@ class TiltedCam {
         this.frameCount = 0;
         this.angleBaseline = 0;
         this.tfSession = tfSession;
+        this.pdf = new pdfDisplay();
+        this.running = false;
+        this.previousTilt = "";
+        this.lastSwitched = 3;
 
         this.cameraView = document.querySelector("#camera--view");
         this.cameraOutput = document.querySelector("#camera--output");
@@ -53,6 +57,7 @@ class TiltedCam {
     }
 
     async getTilt() {
+        if (!this.running) {return;}
         posenet.load().then(function(net) {
             const pose = net.estimateSinglePose(this.cameraView, {
               flipHorizontal: true
@@ -64,30 +69,41 @@ class TiltedCam {
             this.pose = pose;
             return this.calculateTilt();
           }.bind(this)).then(function(result) {
-            if (result == "right") {
+            if (this.previousTilt == result || this.lastSwitched < 3) {
+                this.lastSwitched++;
+                console.log("throttle");
+            }
+            else if (result == "right") {
+                this.lastSwitched = 0;
                 console.log("right");
-                pdfdisplay.next();
+                this.previousTilt = result;
+                this.pdf.next();
             }
             else if (result == "left") {
-            console.log("left");
-            pdfdisplay.back();
+                this.lastSwitched = 0;
+                this.previousTilt = result;
+                console.log("left");
+                this.pdf.back();
             }
             else {
+                this.lastSwitched++;
+                this.previousTilt = result;
                 console.log("neither");
             }
+          }.bind(this)).then(function () {
+              this.getTilt();
           }.bind(this));
     }
 
     calculateTilt() {
         if (this.frameCount < 5) {
-            this.angleBaseline += this.getAngle()
             this.frameCount++;
+            this.angleBaseline += this.getAngle()
         }
         else if (this.frameCount == 5) {
-            this.calibrate()
             this.frameCount++;
+            this.calibrate()
         }
-
         var isTurn = this.isTurned();
         this.tilt;
         if(this.getAngle() > this.tiltThreshold + this.angleBaseline && !isTurn) {
@@ -144,5 +160,7 @@ class TiltedCam {
         this.angleBaseline /= this.calibrationDuration;
     }
 
-    
+    toggleRunning() {
+        this.running = !this.running;
+    }
 }

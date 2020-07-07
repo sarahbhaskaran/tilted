@@ -39,8 +39,10 @@ async function run() {
 }
 
 startButton.addEventListener('click', button => {
-    started = true;
-    run();
+    // started = true;
+    tcam.toggleRunning();
+    // run();
+    tcam.getTilt();
     console.log(tcam.getTilt());
 
 })
@@ -49,7 +51,8 @@ recalibrateButton.addEventListener('click', button => {
     //call method in recalibrate
     //call loop again
     console.log("recalibrate")
-    started = false;
+    // started = false;
+    tcam.toggleRunning();
 })
 
 /* Get the documentElement (<html>) to display the page in fullscreen */

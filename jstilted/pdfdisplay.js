@@ -16,6 +16,20 @@ choose.addEventListener("click", function() {
     realFileBtn.click();
 })
 
+class pdfDisplay {
+    next() {
+        next();
+    }
+
+    back() {
+        back();
+    }
+
+    goTo(n) {
+        goTo(n);
+    }
+}
+
 
 
 realFileBtn.addEventListener("click", function() {
@@ -23,7 +37,6 @@ realFileBtn.addEventListener("click", function() {
     document.getElementById('file').onchange = function(event) {
         
     file = event.target.files[0];
-    console.log(totalPages);
     fileReader = new FileReader();
     currPageNumber = 1;
     fileReader.onload = render;
@@ -32,7 +45,6 @@ realFileBtn.addEventListener("click", function() {
     img.style.display = "none";
     const canvas = document.getElementById("pdfCanvas");
     canvas.style.display = "inherit";
-    console.log("should have disappeared");
     }
 });
 
@@ -46,7 +58,6 @@ function next() {
 function goTo(n) {
     num = parseInt(n, 10);
     if (inPageRange(num)) {
-        console.log(num)
         currPageNumber = num;
         render();
     }
@@ -79,7 +90,6 @@ function render() {
     // The document is loaded here...
     //This below is just for demonstration purposes showing that it works with the moderen api
     pdf.getPage(currPageNumber).then(function(page) {
-        console.log('Page loaded');
         var scale = .7;
         var viewport = page.getViewport({
         scale: scale
@@ -89,8 +99,6 @@ function render() {
         var context = canvas.getContext('2d');
         canvas.height = viewport.height;
         canvas.width = viewport.width;
-        console.log("page number");
-        console.log(loadingTask.numPages);
 
         // Render PDF page into canvas context
         var renderContext = {
@@ -99,12 +107,9 @@ function render() {
         };
         var renderTask = page.render(renderContext);
         renderTask.promise.then(function() {
-        console.log('Page rendered');
         });
 
     });
-    console.log("num pages");
-    console.log(loadingTask.numPages);
     //end of example code
     });
 
@@ -120,7 +125,6 @@ backButton.addEventListener('click', button=> {
 })
 
 jumpButton.addEventListener('click', button=> {
-    console.log("is this what I should be doing");
     goTo(document.getElementById('goToPage').value);
     document.getElementById('goToPage').value = "";
 })
