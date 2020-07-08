@@ -34,7 +34,7 @@ recalibrateButton.addEventListener('click', button => {
     //call loop again
     console.log("recalibrate")
     // started = false;
-    tcam.toggleRunning();
+    tcam.recalibrate();
 })
 
 /* Get the documentElement (<html>) to display the page in fullscreen */
