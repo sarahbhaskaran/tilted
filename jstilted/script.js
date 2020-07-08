@@ -35,7 +35,7 @@ recalibrateButton.addEventListener('click', button => {
     //call loop again
     console.log("recalibrate")
     // started = false;
-    tcam.toggleRunning();
+    tcam.recalibrate();
 })
 
 swapButton.addEventListener('click', button => {
