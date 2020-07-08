@@ -14,7 +14,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet"></script>
   <script src="tilted_cam.js" defer></script>
- 
+  <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons.js"></script>
 </head>
 <body>
   <input type="file" id="file" hidden="hidden"/><br/>
@@ -25,9 +25,14 @@
     <img src="//:0" alt="" id="camera--output">
   </div>
   <div id="left-buttons" class = .buttons>
-    <button class="left-button" id="data-choose" data-choose>Choose File</button> <br/>
-    <button class="left-button" data-start>Start</button><br/>
-    <button class="left-button" data-recalibrate>Recalibrate</button>
+    <button class="left-button" id="data-choose" data-choose><ion-icon name="cloud-upload-outline">
+    </ion-icon></button><br/>
+    <button class="left-button" data-start><ion-icon name="play-outline">Play
+    </ion-icon></button><br/>
+    <button class="left-button" data-recalibrate><ion-icon name="refresh-outline">
+    </ion-icon></button>
+    <button class="left-button" id="switch"><ion-icon name="swap-horizontal-outline">
+    </ion-icon></button>
   </div>
 
   <canvas id="pdfCanvas" width="auto" height="100vh"></canvas>
@@ -35,10 +40,10 @@
 
 
   <div id="right-buttons" class=.buttons>
-    <button class="right-button" data-forward>Forward</button><br/>
-    <button class="right-button" data-back>Back</button>
+    <button class="right-button" data-forward><ion-icon name="chevron-forward-outline"></ion-icon></button><br/>
+    <button class="right-button" data-back><ion-icon name="chevron-back-outline"></ion-icon></button>
+    <button class="right-button" id="jumpTo" data-goTo><ion-icon name="return-up-forward-outline"></ion-icon></button>
     <form class="right-button">
-      <input type="button" id="jumpTo" value="Jump To"/><br/>
       <input type="text" id="goToPage" name="goToPage"/>
     </form>
   </div>

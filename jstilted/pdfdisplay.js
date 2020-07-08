@@ -125,6 +125,7 @@ backButton.addEventListener('click', button=> {
 })
 
 jumpButton.addEventListener('click', button=> {
+    console.log("jumpButton")
     goTo(document.getElementById('goToPage').value);
     document.getElementById('goToPage').value = "";
 })

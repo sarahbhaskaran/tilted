@@ -7,6 +7,7 @@ const canvas = document.getElementById("pdfCanvas");
 canvas.style.display = "none";
 const startButton = document.querySelector('[data-start]')
 const recalibrateButton = document.querySelector('[data-recalibrate]')
+const swapButton = document.getElementById("switch");
 var pdf = document.querySelector('[data-pdf]')
 
 var pdf;
@@ -35,6 +36,10 @@ recalibrateButton.addEventListener('click', button => {
     console.log("recalibrate")
     // started = false;
     tcam.toggleRunning();
+})
+
+swapButton.addEventListener('click', button => {
+  tcam.swap();
 })
 
 /* Get the documentElement (<html>) to display the page in fullscreen */

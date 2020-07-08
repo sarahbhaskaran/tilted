@@ -13,4 +13,10 @@
   button, form, input {
     width: 80px;
   }
+
+  /* doesn't work */
+  input {
+    border: none;
+    padding: none;
+  }
   

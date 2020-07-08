@@ -39,6 +39,8 @@ class TiltedCam {
         this.running = false;
         this.previousTilt = "";
         this.lastSwitched = 3;
+        this.right = 'right';
+        this.left = 'left';
 
         this.cameraView = document.querySelector("#camera--view");
         this.cameraOutput = document.querySelector("#camera--output");
@@ -107,10 +109,10 @@ class TiltedCam {
         var isTurn = this.isTurned();
         this.tilt;
         if(this.getAngle() > this.tiltThreshold + this.angleBaseline && !isTurn) {
-            this.tilt = 'left';
+            this.tilt = this.left;
         }
         else if (this.getAngle() < -1*this.tiltThreshold + this.angleBaseline && !isTurn) {
-            this.tilt = 'right';
+            this.tilt = this.right;
         }
         else {
             this.tilt = '';
@@ -162,5 +164,19 @@ class TiltedCam {
 
     toggleRunning() {
         this.running = !this.running;
+        if (this.running) {
+            const startButton = document.querySelector('[data-start]').innerHTML = 
+            '<ion-icon name="stop-outline"></ion-icon>';
+        }
+        else {
+            const startButton = document.querySelector('[data-start]').innerHTML = 
+            '<ion-icon name="play-outline"></ion-icon>';
+        }
+    }
+
+    swap() {
+        var temp = this.left;
+        this.left = this.right;
+        this.right = temp;
     }
 }
